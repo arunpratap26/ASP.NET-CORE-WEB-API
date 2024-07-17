@@ -1,5 +1,4 @@
 using CompanyEmployees.Extensions;
-using LoggerService;
 using Microsoft.AspNetCore.HttpOverrides;
 using NLog;
 
