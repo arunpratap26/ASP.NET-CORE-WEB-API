@@ -9,7 +9,7 @@ LogManager.LoadConfiguration(string.Concat(Directory.GetCurrentDirectory(),"/nlo
 builder.Services.ConfigureCors();
 builder.Services.ConfigureIISIntegration();
 builder.Services.ConfigureLoggerServices();
-
+builder.Services.ConfigureRepositoryManager();
 builder.Services.AddControllers();
 
 var app = builder.Build();
