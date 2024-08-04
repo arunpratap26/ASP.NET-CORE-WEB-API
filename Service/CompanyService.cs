@@ -4,7 +4,6 @@ using Entities.Exceptions;
 using Entities.Models;
 using Service.Contracts;
 using Shared.DataTransferObjects;
-using System.ComponentModel.Design;
 
 namespace Service
 {
@@ -72,7 +71,7 @@ namespace Service
                 _repository.Company.CreateCompany(company);
             }
 
-           await _repository.SaveAsync();
+            await _repository.SaveAsync();
 
             var companyCollectionToReturn = _mapper.Map<IEnumerable<CompanyDto>>(companyEntities);
             var ids = string.Join(",", companyCollectionToReturn.Select(c => c.Id));
@@ -86,7 +85,7 @@ namespace Service
                 throw new CompanyNotFoundException(companyId);
 
             _repository.Company.DeleteCompany(company);
-            _repository.SaveAsync();
+            await _repository.SaveAsync();
         }
 
         public async Task UpdateCompanyAsync(Guid companyId, CompanyForUpdateDto companyForUpdate, bool trackChanges)
@@ -96,7 +95,7 @@ namespace Service
                 throw new CompanyNotFoundException(companyId);
 
             _mapper.Map(companyForUpdate, companyEntity);
-            _repository.SaveAsync();
+            await _repository.SaveAsync();
         }
     }
 }
