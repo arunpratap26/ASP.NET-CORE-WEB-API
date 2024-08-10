@@ -36,6 +36,7 @@ builder.Services.AddControllers(config =>
     .AddApplicationPart(typeof(CompanyEmployees.Presentation.AssemblyReference)
     .Assembly);
 
+builder.Services.ConfigureVersioning();
 builder.Services.AddCustomMediaTypes();
 builder.Services.Configure<ApiBehaviorOptions>(options =>
 {
