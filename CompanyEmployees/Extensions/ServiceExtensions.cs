@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Repository;
 using Service;
 using Service.Contracts;
+using Marvin.Cache.Headers;
 
 namespace CompanyEmployees.Extensions
 {
@@ -73,5 +74,19 @@ namespace CompanyEmployees.Extensions
                 opt.DefaultApiVersion = new ApiVersion(1, 0);
             });
         }
+
+        public static void ConfigureResponseCaching(this IServiceCollection services) =>
+             services.AddResponseCaching();
+
+        public static void ConfigureHttpCacheHeaders(this IServiceCollection services) =>
+             services.AddHttpCacheHeaders((expirationOpt) =>
+             {
+                 expirationOpt.MaxAge = 65;
+                 expirationOpt.CacheLocation = CacheLocation.Private;
+             },
+             (validationOpt) =>
+             {
+                 validationOpt.MustRevalidate = true;
+            });
     }
 }
