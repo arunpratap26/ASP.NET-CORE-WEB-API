@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Entities.ConfigurationModels;
+using Microsoft.OpenApi.Models;
 
 namespace CompanyEmployees.Extensions
 {
@@ -94,7 +95,7 @@ namespace CompanyEmployees.Extensions
              (validationOpt) =>
              {
                  validationOpt.MustRevalidate = true;
-            });
+             });
 
         public static void ConfigureRateLimitingOptions(this IServiceCollection services)
         {
@@ -108,7 +109,8 @@ namespace CompanyEmployees.Extensions
                }
             };
 
-            services.Configure<IpRateLimitOptions>(opt => {
+            services.Configure<IpRateLimitOptions>(opt =>
+            {
                 opt.GeneralRules = rateLimitRules;
             });
             services.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounterStore>();
@@ -160,5 +162,62 @@ namespace CompanyEmployees.Extensions
 
         public static void AddJwtConfiguration(this IServiceCollection services, IConfiguration configuration) =>
             services.Configure<JwtConfiguration>(configuration.GetSection("JwtSettings"));
+
+        public static void ConfigureSwagger(this IServiceCollection services)
+        {
+            services.AddSwaggerGen(s =>
+            {
+                s.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "Employees API",
+                    Version = "v1",
+                    Description = "CompanyEmployees API Created by Arun",
+                    Contact = new OpenApiContact
+                    {
+                        Name = "Arun Singh",
+                        Email = "Arunpratap26@yahoo.com",
+                        Url = new Uri("https://twitter.com/robbiu9"),
+                    }
+                });
+                s.SwaggerDoc("v2", new OpenApiInfo
+                {
+                    Title = "Employees API",
+                    Version = "v2",
+                    Description = "CompanyEmployees API Created by Arun",
+                    Contact = new OpenApiContact
+                    {
+                        Name = "Arun Singh",
+                        Email = "Arunpratap26@yahoo.com",
+                        Url = new Uri("https://twitter.com/robbiu9"),
+                    }
+                });
+                s.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    In = ParameterLocation.Header,
+                    Description = "Place to add JWT with Bearer",
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer"
+                });
+                s.AddSecurityRequirement(new OpenApiSecurityRequirement()
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            },
+                            Name = "Bearer",
+                        },
+                        new List<string>()
+                    }
+               });
+                var xmlFile = $"{typeof(Presentation.AssemblyReference).Assembly.GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                s.IncludeXmlComments(xmlPath);
+            });
+        }
     }
 }
