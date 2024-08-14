@@ -4,21 +4,147 @@
         <name>CompanyEmployees.Presentation</name>
     </assembly>
     <members>
+        <member name="M:CompanyEmployees.Presentation.Controllers.AuthenticationController.RegisterUser(Shared.DataTransferObjects.UserForRegistrationDto)">
+            <summary>
+            Register User
+            </summary>
+            <param name="userForRegistration"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CompanyEmployees.Presentation.Controllers.AuthenticationController.Authenticate(Shared.DataTransferObjects.UserForAuthenticationDto)">
+            <summary>
+            Authenticate User
+            </summary>
+            <param name="user"></param>
+            <returns>Token</returns>
+        </member>
         <member name="M:CompanyEmployees.Presentation.Controllers.CompaniesController.GetCompanies">
             <summary>
-            Gets the list of all companies
+            Get the list of all companies
             </summary>
             <returns>The companies list</returns>
         </member>
+        <member name="M:CompanyEmployees.Presentation.Controllers.CompaniesController.GetCompany(System.Guid)">
+            <summary>
+            Get company by Id
+            </summary>
+            <param name="id"></param>
+            <returns>Company</returns>
+        </member>
         <member name="M:CompanyEmployees.Presentation.Controllers.CompaniesController.CreateCompany(Shared.DataTransferObjects.CompanyForCreationDto)">
             <summary>
-            Creates a newly created company
+            Create a newly created company
             </summary>
             <param name="company"></param>
             <returns>A newly created company</returns>
             <response code="201">Returns the newly created item</response>
             <response code="400">If the item is null</response>
             <response code="422">If the model is invalid</response>
+        </member>
+        <member name="M:CompanyEmployees.Presentation.Controllers.CompaniesController.GetCompanyCollection(System.Collections.Generic.IEnumerable{System.Guid})">
+            <summary>
+            Get Company Collection
+            </summary>
+            <param name="ids"></param>
+            <returns>CompanyCollection</returns>
+        </member>
+        <member name="M:CompanyEmployees.Presentation.Controllers.CompaniesController.CreateCompanyCollection(System.Collections.Generic.IEnumerable{Shared.DataTransferObjects.CompanyForCreationDto})">
+            <summary>
+            Create Company Collection
+            </summary>
+            <param name="companyCollection"></param>
+            <returns>Created Company Collection</returns>
+        </member>
+        <member name="M:CompanyEmployees.Presentation.Controllers.CompaniesController.DeleteCompany(System.Guid)">
+            <summary>
+            Delete Company
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CompanyEmployees.Presentation.Controllers.CompaniesController.UpdateCompany(System.Guid,Shared.DataTransferObjects.CompanyForUpdateDto)">
+            <summary>
+            Update Company With Put
+            </summary>
+            <param name="id"></param>
+            <param name="company"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CompanyEmployees.Presentation.Controllers.CompaniesController.GetCompaniesOptions">
+            <summary>
+            Get Company Options
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CompanyEmployees.Presentation.Controllers.CompaniesV2Controller.GetCompanies">
+            <summary>
+            Get the list of all companies
+            </summary>
+            <returns>The companies list</returns>
+        </member>
+        <member name="M:CompanyEmployees.Presentation.Controllers.EmployeesController.GetEmployeesForCompany(System.Guid,Shared.RequestFeatures.EmployeeParameters)">
+            <summary>
+            Get Employees For Company with Head
+            </summary>
+            <param name="companyId"></param>
+            <param name="employeeParameters"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CompanyEmployees.Presentation.Controllers.EmployeesController.GetEmployeeForCompany(System.Guid,System.Guid)">
+            <summary>
+            Get Employee For Company by companyId and employee id
+            </summary>
+            <param name="companyId"></param>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CompanyEmployees.Presentation.Controllers.EmployeesController.CreateEmployeeForCompany(System.Guid,Shared.DataTransferObjects.EmployeeForCreationDto)">
+            <summary>
+            Create Employee For Company
+            </summary>
+            <param name="companyId"></param>
+            <param name="employee"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CompanyEmployees.Presentation.Controllers.EmployeesController.DeleteEmployeeForCompany(System.Guid,System.Guid)">
+            <summary>
+            Delete Employee For Company
+            </summary>
+            <param name="companyId"></param>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CompanyEmployees.Presentation.Controllers.EmployeesController.UpdateEmployeeForCompany(System.Guid,System.Guid,Shared.DataTransferObjects.EmployeeForUpdateDto)">
+            <summary>
+            Update Employee For Company
+            </summary>
+            <param name="companyId"></param>
+            <param name="id"></param>
+            <param name="employee"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CompanyEmployees.Presentation.Controllers.EmployeesController.PartiallyUpdateEmployeeForCompany(System.Guid,System.Guid,Microsoft.AspNetCore.JsonPatch.JsonPatchDocument{Shared.DataTransferObjects.EmployeeForUpdateDto})">
+            <summary>
+            Partially Update Employee For Company
+            </summary>
+            <param name="companyId"></param>
+            <param name="id"></param>
+            <param name="patchDoc"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CompanyEmployees.Presentation.Controllers.RootController.GetRoot(System.String)">
+            <summary>
+            Get Root Document 
+            </summary>
+            <param name="mediaType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CompanyEmployees.Presentation.Controllers.TokenController.Refresh(Shared.DataTransferObjects.TokenDto)">
+            <summary>
+            Refresh Token
+            </summary>
+            <param name="tokenDto"></param>
+            <returns></returns>
         </member>
     </members>
 </doc>

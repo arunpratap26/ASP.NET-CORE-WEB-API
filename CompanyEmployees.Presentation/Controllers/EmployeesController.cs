@@ -19,6 +19,12 @@ namespace CompanyEmployees.Presentation.Controllers
             _service = service;
         }
 
+        /// <summary>
+        /// Get Employees For Company with Head
+        /// </summary>
+        /// <param name="companyId"></param>
+        /// <param name="employeeParameters"></param>
+        /// <returns></returns>
         [HttpGet]
         [HttpHead]
         [ServiceFilter(typeof(ValidateMediaTypeAttribute))]
@@ -30,6 +36,12 @@ namespace CompanyEmployees.Presentation.Controllers
             return result.linkResponse.HasLinks ? Ok(result.linkResponse.LinkedEntities) : Ok(result.linkResponse.ShapedEntities);
         }
 
+        /// <summary>
+        /// Get Employee For Company by companyId and employee id
+        /// </summary>
+        /// <param name="companyId"></param>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet("{id:guid}", Name = "GetEmployeeForCompany")]
         public async Task<IActionResult> GetEmployeeForCompany(Guid companyId, Guid id)
         {
@@ -37,6 +49,12 @@ namespace CompanyEmployees.Presentation.Controllers
             return Ok(employee);
         }
 
+        /// <summary>
+        /// Create Employee For Company
+        /// </summary>
+        /// <param name="companyId"></param>
+        /// <param name="employee"></param>
+        /// <returns></returns>
         [HttpPost]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> CreateEmployeeForCompany(Guid companyId, [FromBody] EmployeeForCreationDto employee)
@@ -45,6 +63,12 @@ namespace CompanyEmployees.Presentation.Controllers
             return CreatedAtRoute("GetEmployeeForCompany", new { companyId, id = employeeToReturn.Id }, employeeToReturn);
         }
 
+        /// <summary>
+        /// Delete Employee For Company
+        /// </summary>
+        /// <param name="companyId"></param>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> DeleteEmployeeForCompany(Guid companyId, Guid id)
         {
@@ -52,6 +76,13 @@ namespace CompanyEmployees.Presentation.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Update Employee For Company
+        /// </summary>
+        /// <param name="companyId"></param>
+        /// <param name="id"></param>
+        /// <param name="employee"></param>
+        /// <returns></returns>
         [HttpPut("{id:guid}")]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> UpdateEmployeeForCompany(Guid companyId, Guid id, [FromBody] EmployeeForUpdateDto employee)
@@ -62,6 +93,13 @@ namespace CompanyEmployees.Presentation.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Partially Update Employee For Company
+        /// </summary>
+        /// <param name="companyId"></param>
+        /// <param name="id"></param>
+        /// <param name="patchDoc"></param>
+        /// <returns></returns>
         [HttpPatch("{id:guid}")]
         public async Task<IActionResult> PartiallyUpdateEmployeeForCompany(Guid companyId, Guid id, [FromBody] JsonPatchDocument<EmployeeForUpdateDto> patchDoc)
         {

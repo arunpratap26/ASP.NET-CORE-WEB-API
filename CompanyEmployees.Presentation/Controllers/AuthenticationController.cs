@@ -12,6 +12,11 @@ namespace CompanyEmployees.Presentation.Controllers
         private readonly IServiceManager _service;
         public AuthenticationController(IServiceManager service) => _service = service;
 
+        /// <summary>
+        /// Register User
+        /// </summary>
+        /// <param name="userForRegistration"></param>
+        /// <returns></returns>
         [HttpPost]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> RegisterUser([FromBody] UserForRegistrationDto userForRegistration)
@@ -28,6 +33,11 @@ namespace CompanyEmployees.Presentation.Controllers
             return StatusCode(201);
         }
 
+        /// <summary>
+        /// Authenticate User
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns>Token</returns>
         [HttpPost("login")]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> Authenticate([FromBody] UserForAuthenticationDto user)

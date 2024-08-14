@@ -11,6 +11,11 @@ namespace CompanyEmployees.Presentation.Controllers
         private readonly LinkGenerator _linkGenerator;
         public RootController(LinkGenerator linkGenerator) => _linkGenerator = linkGenerator;
 
+        /// <summary>
+        /// Get Root Document 
+        /// </summary>
+        /// <param name="mediaType"></param>
+        /// <returns></returns>
         [HttpGet(Name = "GetRoot")]
         public IActionResult GetRoot([FromHeader(Name = "Accept")] string mediaType)
         {

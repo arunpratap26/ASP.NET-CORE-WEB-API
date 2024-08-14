@@ -12,6 +12,10 @@ namespace CompanyEmployees.Presentation.Controllers
         private readonly IServiceManager _service;
         public CompaniesV2Controller(IServiceManager service) => _service = service;
 
+        /// <summary>
+        /// Get the list of all companies
+        /// </summary>
+        /// <returns>The companies list</returns>
         [HttpGet]
         public async Task<IActionResult> GetCompanies()
         {

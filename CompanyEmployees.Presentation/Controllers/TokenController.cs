@@ -12,6 +12,11 @@ namespace CompanyEmployees.Presentation.Controllers
         private readonly IServiceManager _service;
         public TokenController(IServiceManager service) => _service = service;
 
+        /// <summary>
+        /// Refresh Token
+        /// </summary>
+        /// <param name="tokenDto"></param>
+        /// <returns></returns>
         [HttpPost("refresh")]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> Refresh([FromBody] TokenDto tokenDto)
