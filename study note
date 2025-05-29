@@ -1,0 +1,128 @@
+------------------------------project configuration------------------------------
+-We don’t use the web.config file anymore, use a built-in Configuration framework that comes out of the box
+*launchSettings.json:configuration determines the launch behavior of the applications. 
+	-launchBrowser property to false to prevent the web browser from launching on application start.
+	-This is convenient since we are developing a Web API project and we don’t need a browser to check our API out. 
+	-sslPort property which indicates that our application, when running in IISExpress, will be configured for HTTPS
+*Program.cs is the entry point to our application.
+	-. we don’t have the class block in the code nor the Main method. All of that is generated for us by the compiler. 
+	var builder = WebApplication.CreateBuilder(args); is responsible for four main things:
+		• Adding Configuration to the project by using the builder.Configuration property
+		• Registering services in our app with the builder.Services property
+		• Logging configuration with the builder.Logging property
+		• Other IHostBuilder and IWebHostBuilder configuration
+-we don’t have the Startup class with two familiarmethods: ConfigureServices and Configure. Now, all this is replaced
+by the code inside the Program.cs file.
+Configure method to add different middleware components to the application’s request pipeline.
+ A service is a reusable part of the code that adds some functionality to our application,  
+* GlobalUsings.g.cs:“Implicit using directives” mean the compiler automatically adds a
+different set of using directives based on a project type, (by default, this is enabled in the .csproj file)
+you can turn it off by  disabling the ImplicitUsings tag:<ImplicitUsings>disable</ImplicitUsing
+
+* CORS (Cross-Origin Resource Sharing) is a mechanism to give or restrict access rights to applications from different domains
+Instead AllowAnyOrigin() which allows requests from any source, use WithOrigins("https://example.com") 
+*app.UseStaticFiles() enables using static files for the request. If we don’t set a path to the static files directory, 
+it will use a wwwroot folder in our project by default.
+*app.UseHsts() will add middleware for using HSTS, which adds the Strict-Transport-Security header.
+*AddControllers():registers only the controllers in IServiceCollection and not Views or Pages because they are not 
+required in the Web API project which we are building.
+*var app = builder.Build();we are creating the app variable of the type
+WebApplication. 
+This class (WebApplication)implements multiple interfaces like 
+	-IHost: that we can use to start and stop the host, 
+	-IApplicationBuilder :that we use to build the middleware pipeline
+	-IEndpointRouteBuilder: used to add endpoints
+*MapControllers:adds the endpoints from controller actions to the IEndpointRouteBuilder and the Run
+method that runs the application and block the calling thread until the host shutdown
+*Enviornemnt based settings(appsettings.json):
+we have a separate configuration for each environment and that’s easy to accomplish.
+The apsettings.{EnvironmentSuffix}.json files are used to override the main appsettings.json file. 
+When we use a key-value pair from the original file, we override it.  
+To set which environment our application runs on, set up ASPNETCORE_ENVIRONMENT environment variable. 
+our launchSettings.json file, we are going to see that this variable is currently set to Development.
+*middleware:code to modify the application’s pipeline (CORS, Authorization...)
+middleware is a piece of code integrated inside the application’s pipeline that we can use to handle requests and responses.
+	-Pass the request to the next middleware component in the pipeline
+	-It can execute some work before and after the next component in the pipeline
+the order in which we should register our middleware components. for the security, performance, and functionality 
+-register the exception handler in the early stage of the pipeline flow so it could catch all the exceptions that can happen in
+the later stages of the pipeline.
+*Working with the Use Method:To chain multiple request delegates in our code, we can use the Use method.
+- Use method before the branch, and the messages from the Use and Run 
+------------------------------configuration logging service------------------------------
+*log to find out what went wrong and why and where exceptions have been thrown in our code in production . 
+Logging helps to follow the flow of our application when we don’t have access to the debugge
+*Info / Debug/Warning /Error messages
+*where to put log files on the file system:internalLogFile=".\internal_logs\internallog.txt"
+*Setting up the configuration for a logger service update Program class and include the path configuration file for NLog 
+*AddSingleton: service the first time we request it and then every request will call the same instance of the service.
+*AddScoped :a service once per request. we send an HTTP request, a new instance of  service will be created.
+*AddTransient :a service each time requests it. if multiple components need , it will be created for every single component.
+*What is Dependency Injection (DI) exactly and what is IoC (Inversion of Control)?
+-DI: a technique to achieve the decoupling of objects and their dependencies.
+, we can instantiate it once and then send it to the class.This is often done through a constructor.
+-IoC container is a factory that is responsible for providing instances of the types that are requested from it.
+------------------------------Onion architecture************ ------------------------------
+* split the architecture into 4 layers:
+	• Domain Layer
+	• Service Layer
+	• Infrastructure Layer
+	• Presentation Layer
+is the flow of dependencies, or rather how the layers interact with each other. 
+*IDesignTimeDbContextFactory<out TContext> allows design-time services to discover implementations of  interface. 
+*seeding data:in OnModelCreating add modelBuilder.ApplyConfiguration(new CompanyConfiguration());
+*generic repository that will provide us with the CRUD methods.
+*the Repository project, create an abstract class RepositoryBase — which implement the IRepositoryBase interface
+*IRepositoryManager:create instances of repository classes and register them inside the dependency injection container
+IRepositoryBase<T>:Defines the basic CRUD operations that all repositories should implement.
+RepositoryBase<T>:The default implementation of IRepositoryBase<T> using Entity Framework Core.
+IRepositoryManager : Acts as a Unit of Work to manage multiple repositories and transactions.
+RepositoryManager :Manages repositories and database transactions.
+ProductService :Demonstrates how to use repositories in a service layer.
+
+Presentation->Service.Contracts
+Contracts->Entities+Shared
+Entities->Shared
+LoggerService->Contracts
+Repository->Contracts+Entities
+Service->Contracts+Service.Contracts
+Service.Contracts->Entities+Shared
+Shared->.......
+CompanyEmployees->Presentation+LoggerService+Repository+Service
+------------------------------Handle Get Request------------------------------
+*Controllers should only be responsible for handling requests, model validation, and returning responses to the frontend or some HTTP client.
+Keeping business logic away from controllers is a good way to keep them lightweight, and our code more readable and maintainable.
+*The purpose of the presentation layer is to provide the entry point to our system so that consumers can interact with the data. 
+*AssemblyReference:access to the ControllerBase class for controllers. use for  assembly reference inside the main project,
+
+presentation layer is to provide the entry point to our system so that consumers can interact with the data.
+ implement routing in the project:
+• Convention-based routing ->use app.UseRouting method to add the routing middleware in the application’s pipeline.
+• Attribute routing
+-Convention-based routing is called such because it establishes a convention for the URL paths. The first part creates the mapping for
+the controller name, the second part creates the mapping for the action method, and the third part is used for the optional parameter. 
+( the routes are configured with the app.MapControllers method, which adds endpoints for controller actions without specifying any routes)
+
+-Attribute routing uses the attributes to map the routes directly to the action methods inside the controller
+Different actions can be executed on the resource with the same URI, but with different HTTP Methods 
+for different actions, we can use the same HTTP Method, but different URIs
+
+
+*resource naming:The noun used in URI represents the resource and helps the consumer to understand what type of resource we are working with 
+When we create a route for a dependent entity, we should follow a slightly differentconvention:
+/api/principalResource/{principalId}/dependentResource
+
+*The IActionResult interface supports using a variety of methods, which return not only the result but also the status codes
+*DTO:A data transfer object (DTO) is an object that we use to transport data between the client and server applications.
+our models have navigational properties and sometimes we don’t want to map them in an API response
+*A Record :an immutable reference type in .NET. the Record’s instance property values cannot change after its initialization. 
+The data are passed by value and the equality between two Records is verified by comparing the value of their properties
+
+-AutoMapper is a library that helps us with mapping objects in our applications. 
+ForCtorParam method to specify the name of the parameter in the constructor that AutoMapper needs to map to.
+
+------------------------------Global Error Handling------------------------------
+-Exception handling helps us deal with the unexpected behavior of our system
+-The UseExceptionHandler middleware is a built-in middleware that we can use to handle exceptions.
+
+ 
